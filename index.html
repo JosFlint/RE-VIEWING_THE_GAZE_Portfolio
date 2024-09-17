@@ -8,21 +8,20 @@
         body {
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            overflow: hidden; /* Prevents scrollbars from appearing */
             background-color: #f0f0f0;
         }
 
         .gallery {
             position: relative;
+            width: 100vw; /* Full viewport width */
+            height: 100vh; /* Full viewport height */
         }
 
         #galleryImage {
-            width: 600px; /* Adjust as needed */
-            height: auto;
-            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensure the image covers the container */
         }
 
         .arrow {
@@ -38,11 +37,11 @@
         }
 
         .left {
-            left: 0;
+            left: 10px;
         }
 
         .right {
-            right: 0;
+            right: 10px;
         }
     </style>
 </head>
@@ -58,7 +57,12 @@
     const images = [
         'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g1.jpg',
         'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g2.jpg',
-        's#1.jpg'
+        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/s2.jpg',
+        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/sx2.jpg',
+        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gs1.jpg',
+        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gs2.jpg',
+        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gss1.jpg',
+        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/ggg1.jpg',
         // Add more image URLs as needed
     ];
 
