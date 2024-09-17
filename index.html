@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .gallery {
+            position: relative;
+        }
+
+        #galleryImage {
+            width: 600px; /* Adjust as needed */
+            height: auto;
+            display: block;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="gallery">
+    <button class="arrow left" onclick="prevImage()">&#10094;</button>
+    <img id="galleryImage" src="image1.jpg" alt="Gallery Image">
+    <button class="arrow right" onclick="nextImage()">&#10095;</button>
+</div>
+
+<script>
+    const images = [
+        'image1.jpg',
+        'image2.jpg',
+        'image3.jpg'
+        // Add more image URLs as needed
+    ];
+
+    let currentIndex = 0;
+
+    function showImage(index) {
+        const imageElement = document.getElementById('galleryImage');
+        imageElement.src = images[index];
+    }
+
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        showImage(currentIndex);
+    }
+
+    function prevImage() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        showImage(currentIndex);
+    }
+
+    // Initialize with the first image
+    showImage(currentIndex);
+</script>
+
+</body>
+</html>
