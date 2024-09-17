@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
+    <title>RE-VIEWING THE GAZE Galleryy</title>
     <style>
         body {
             margin: 0;
@@ -16,12 +16,17 @@
             position: relative;
             width: 100vw; /* Full viewport width */
             height: 100vh; /* Full viewport height */
+            overflow: hidden; /* Hide overflow for sliding effect */
         }
 
         #galleryImage {
             width: 100%;
             height: 100%;
             object-fit: cover; /* Ensure the image covers the container */
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.5s ease-in-out; /* Smooth transition for sliding effect */
         }
 
         .arrow {
@@ -57,8 +62,8 @@
     const images = [
         'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g1.jpg',
         'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g2.jpg',
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/s2.jpg',
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/sx2.jpg',
+        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/s1.jpg',
+        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/sx1.jpg',
         'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gs1.jpg',
         'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gs2.jpg',
         'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gss1.jpg',
@@ -67,24 +72,33 @@
     ];
 
     let currentIndex = 0;
+    let direction = 'right'; // Initial direction
 
-    function showImage(index) {
+    function showImage(index, dir) {
         const imageElement = document.getElementById('galleryImage');
-        imageElement.src = images[index];
+        imageElement.style.transform = `translateX(${dir === 'right' ? '100%' : '-100%'})`;
+
+        // Update image source and trigger reflow
+        setTimeout(() => {
+            imageElement.src = images[index];
+            imageElement.style.transform = 'translateX(0)';
+        }, 500); // Match this time with the transition duration
     }
 
     function nextImage() {
+        direction = 'right';
         currentIndex = (currentIndex + 1) % images.length;
-        showImage(currentIndex);
+        showImage(currentIndex, direction);
     }
 
     function prevImage() {
+        direction = 'left';
         currentIndex = (currentIndex - 1 + images.length) % images.length;
-        showImage(currentIndex);
+        showImage(currentIndex, direction);
     }
 
     // Initialize with the first image
-    showImage(currentIndex);
+    showImage(currentIndex, direction);
 </script>
 
 </body>
