@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
+    <title>Image Gallery with Overlay Button</title>
     <style>
         html, body {
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Prevents scrollbars from appearing */
+            overflow: hidden;
             height: 100%;
         }
 
         .gallery {
             position: relative;
-            width: 100vw; /* Full viewport width */
-            height: 100vh; /* Full viewport height */
+            width: 100vw;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #fff; /* Ensure background matches image */
+            background-color: #fff;
         }
 
         #galleryImage {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Ensure the image scales correctly */
-            display: block; /* Ensure the image fills the container */
+            object-fit: contain;
         }
 
         .arrow {
@@ -49,49 +49,217 @@
         .right {
             right: 10px;
         }
+
+        /* Overlay button styles */
+        #overlayButton {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 11;
+        }
+
+        /* Information button */
+        #infoButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 11;
+        }
+
+        /* Overlay image */
+        #overlay-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none; /* Ensure it's hidden initially */
+            background-image: url('https://josflint.github.io/RE-VIEWING_THE_GAZE/overlay.png');
+            background-size: cover;
+            background-position: center;
+            mix-blend-mode: multiply;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Information popup */
+        #infoPopup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 9;
+            display: none; /* Hidden initially */
+        }
+
+        /* Menu styles */
+        #menuButton {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 11;
+        }
+
+        #menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            height: 0;
+            overflow: hidden;
+            transition: height 0.5s ease;
+            z-index: 10;
+        }
+
+        #menu.open {
+            height: 100vh;
+        }
+
+        #menuContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        #menuContent a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            margin: 10px;
+        }
+
     </style>
 </head>
+
 <body>
 
-<div class="gallery">
-    <button class="arrow left" onclick="prevImage()">&#10094;</button>
-    <img id="galleryImage" src="https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g1.jpg" alt="Gallery Image">
-    <button class="arrow right" onclick="nextImage()">&#10095;</button>
-</div>
+    <div class="gallery">
+        <button class="arrow left" onclick="prevImage()">&#10094;</button>
+        <img id="galleryImage" src="https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g1.jpg" alt="Gallery Image">
+        <button class="arrow right" onclick="nextImage()">&#10095;</button>
+    </div>
 
-<script>
-    const images = [
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g1.jpg',
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g2.jpg',
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/s1.jpg',
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/sx1.jpg',
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gs1.jpg',
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gs2.jpg',
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gss1.jpg',
-        'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/ggg1.jpg',
-        // Add more image URLs as needed
-    ];
+    <!-- Overlay Button -->
+    <button id="overlayButton" onclick="toggleOverlay()">Overlay Button</button>
 
-    let currentIndex = 0;
+    <!-- Information Button -->
+    <button id="infoButton" onclick="toggleInfo()">&#9432;</button>
 
-    function showImage(index) {
-        const imageElement = document.getElementById('galleryImage');
-        imageElement.src = images[index];
-    }
+    <!-- Information Popup -->
+    <div id="infoPopup">
+        <div>
+            <h1>Information</h1>
+            <p>This is some information about the image gallery.</p>
+        </div>
+    </div>
 
-    function nextImage() {
-        currentIndex = (currentIndex + 1) % images.length;
+    <!-- Overlay Image -->
+    <div id="overlay-image"></div>
+
+    <!-- Menu Button -->
+    <button id="menuButton" onclick="toggleMenu()">Menu</button>
+
+    <!-- Menu -->
+    <div id="menu">
+        <div id="menuContent">
+            <a href="https://josflint.com">Artist Website</a>
+            <a href="https://josflint.github.io/RE-VIEWING_THE_GAZE/">Virtual Tour</a>
+            <a href="https://sdcapgshow2024.lboro.ac.uk/?post_type=student&p=336">MA Website</a>
+            <a href="https://josflint.github.io/RE-VIEWING_THE_GAZE_Filter/">Camera Filter</a>
+            <!-- Add more menu links as needed -->
+        </div>
+    </div>
+
+    <script>
+        const images = [
+            'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g1.jpg',
+            'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/g2.jpg',
+            'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/s1.jpg',
+            'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/sx1.jpg',
+            'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gs1.jpg',
+            'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gs2.jpg',
+            'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/gss1.jpg',
+            'https://josflint.github.io/RE-VIEWING_THE_GAZE_Portfolio/ggg1.jpg',
+        ];
+
+        let currentIndex = 0;
+
+        function showImage(index) {
+            const imageElement = document.getElementById('galleryImage');
+            imageElement.src = images[index];
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage(currentIndex);
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(currentIndex);
+        }
+
+        function toggleOverlay() {
+            const overlay = document.getElementById('overlay-image');
+            if (overlay.style.display === 'none' || overlay.style.display === '') {
+                overlay.style.display = 'block';
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
+
+        function toggleInfo() {
+            const infoPopup = document.getElementById('infoPopup');
+            infoPopup.style.display = infoPopup.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('open');
+        }
+
+        // Ensure information popup is hidden on load
+        window.onload = function() {
+            document.getElementById('infoPopup').style.display = 'none';
+        };
+
+        // Initialize with the first image
         showImage(currentIndex);
-    }
-
-    function prevImage() {
-        currentIndex = (currentIndex - 1 + images.length) % images.length;
-        showImage(currentIndex);
-    }
-
-    // Initialize with the first image
-    showImage(currentIndex);
-</script>
+    </script>
 
 </body>
+
 </html>
